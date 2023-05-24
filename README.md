@@ -1,2 +1,2 @@
-# EcomGPT
-ChatGPT E-commerce Project
+# Ecom
+E-commerce System
