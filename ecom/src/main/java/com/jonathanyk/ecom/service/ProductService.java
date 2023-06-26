@@ -3,6 +3,9 @@ package com.jonathanyk.ecom.service;
 import com.jonathanyk.ecom.model.Product;
 import com.jonathanyk.ecom.repository.ProductRepository;
 import com.jonathanyk.ecom.model.ProductRecord;
+import com.jonathanyk.ecom.service.search.SearchAlgorithm;
+import com.jonathanyk.ecom.service.search.SearchAlgoName;
+import com.jonathanyk.ecom.service.search.SearchFactory;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +75,7 @@ public class ProductService {
 
     public ResponseEntity<String> loadProductsCsv() {
 
-        try (CSVReader csvReader = new CSVReader(new FileReader("src/main/java/com/kalma/ecom/model/importProducts.csv"))) {
+        try (CSVReader csvReader = new CSVReader(new FileReader("src/main/java/com/jonathanyk/ecom/model/importProducts.csv"))) {
             List<Product> products = new ArrayList<>();
             String[] record = csvReader.readNext();
             while (record != null) {
@@ -86,11 +89,18 @@ public class ProductService {
         } catch (FileNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CSV file not found. " + e.getMessage());
         } catch (CsvValidationException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CSV file validation exception: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("CSV file validation exception: " + e.getMessage());
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("IO exception occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("IO exception occurred: " + e.getMessage());
         }
 
         return ResponseEntity.ok("Product updated successfully");
+    }
+
+    public ResponseEntity<String> binarySearchExec() {
+        SearchFactory searchFactory = new SearchFactory();
+        SearchAlgorithm binarySearchAlgorithm = searchFactory.getSearch(SearchAlgoName.BINARY_SEARCH);
+        return ResponseEntity.ok("TODO: FINISH IMPLEMENTATION!");
+
     }
 }
